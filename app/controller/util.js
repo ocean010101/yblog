@@ -2,6 +2,7 @@
 
 const BaseController = require('./base')
 const svgCaptcha = require('svg-captcha')
+
 class UtilController extends BaseController {
   async captcha() {
     // 生成图形验证码
@@ -20,6 +21,30 @@ class UtilController extends BaseController {
     // 通过 HTTP 将结果响应给用户
     ctx.response.type = 'image/svg+xml'
     ctx.body = captcha.data
+  }
+
+  async sendCode() {
+    const { ctx, service } = this
+    const email = ctx.query.email // yangwebtest@163.com
+    // 生成四位验证码
+    const code = Math.random().toString().slice(2, 6)
+    console.log('邮箱验证码：' + code)
+    ctx.session.emailcode = code
+    const subject = 'vueProSumm验证码'
+    const html = `
+    <h1>注册验证码</h1>
+    <div>
+      ${code}
+    </div>
+    `
+    const text = ''
+    // 发送验证码到邮箱
+    const hasSend = await service.tools.sendEmail(email, subject, text, html)
+    if (hasSend) {
+      this.message('发送成功')
+    } else {
+      this.error('发送失败')
+    }
   }
 }
 module.exports = UtilController
