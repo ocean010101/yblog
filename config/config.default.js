@@ -42,5 +42,8 @@ module.exports = appInfo => {
         enable: false,
       },
     },
+    jwt: {
+      secret: 'tanchaolizi',
+    },
   }
 }
