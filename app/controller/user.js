@@ -78,5 +78,13 @@ class UserController extends BaseController {
     })
   }
 
+  async info() {
+    const { ctx } = this
+    // 从token 中读取用户信息
+    const { email } = ctx.state
+    console.log('info email=', email)
+    const user = await this.checkEmail(email)
+    this.success(user)
+  }
 }
 module.exports = UserController
