@@ -80,5 +80,30 @@ class UtilController extends BaseController {
       url: `/public/${hash}.${ext}`,
     })
   }
+  async getUploadedList(fileDir) {
+    return fse.existsSync(fileDir) ? (await fse.readdir(fileDir)).filter(name => name[0] !== '.') : []
+  }
+  /**
+   * 根据文件hash名和后缀判断文件是否存在，
+   *  如果没有存在 uploaded = false, uploadedList = []
+   *  如果没有存在 uploaded = true, uploadedList = 已经存在的文件碎片的索引的列表
+   *
+   */
+  async checkFile() {
+    const { ctx } = this
+    const { ext, hash } = ctx.request.body
+    const filePath = path.resolve(this.config.UPLOAD_DIR, `${hash}.${ext}`)
+    let uploaded = false,
+      uploadedList = []
+    if (fse.existsSync(filePath)) { // 文件存在
+      uploaded = true
+    } else { // 文件不存在，查询名字为文件hash的问价夹是否存在
+      uploadedList = await this.getUploadedList(path.resolve(this.config.UPLOAD_DIR, hash))
+    }
+    this.success({
+      uploaded,
+      uploadedList,
+    })
+  }
 }
 module.exports = UtilController
