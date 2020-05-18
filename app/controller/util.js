@@ -69,5 +69,16 @@ class UtilController extends BaseController {
     //   url: `/public/${file.filename}`,
     // })
   }
+
+  async mergeFile() {
+    const { ctx, service } = this
+    // ext: 文件后缀;  size: 切片大小; hash: 文件hash
+    const { ext, size, hash } = ctx.request.body
+    const filePath = path.resolve(this.config.UPLOAD_DIR, `${hash}.${ext}`)
+    await service.tools.mergeFile(filePath, hash, size)
+    this.success({
+      url: `/public/${hash}.${ext}`,
+    })
+  }
 }
 module.exports = UtilController
