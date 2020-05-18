@@ -3,6 +3,7 @@
 const BaseController = require('./base')
 const svgCaptcha = require('svg-captcha')
 const fse = require('fs-extra')
+const path = require('path')
 
 class UtilController extends BaseController {
   async captcha() {
@@ -47,16 +48,26 @@ class UtilController extends BaseController {
       this.error('发送失败')
     }
   }
-
+  /**
+   * 把文件片段上传到 public/hash/{hash+index}
+   */
   async uploadFile() {
     const { ctx } = this
-    // const { name } = ctx.request.body
+    const { hash, name } = ctx.request.body
     const file = ctx.request.files[0]
 
-    await fse.move(file.filepath, this.config.UPLOAD_DIR + '/' + file.filename)
-    this.success({
-      url: `/public/${file.filename}`,
-    })
+    // 存储文件块的文件夹
+    const chunkPath = path.resolve(this.config.UPLOAD_DIR, hash)
+    // 判断存储chunk的目录是否存在
+    if (!fse.existsSync(chunkPath)) {
+      await fse.mkdir(chunkPath)
+    }
+    // 把chunk 从file.filepath 移到chunkPath 目录下
+    await fse.move(file.filepath, `${chunkPath}/${name}`)
+    this.message('切片上传成功')
+    // this.success({
+    //   url: `/public/${file.filename}`,
+    // })
   }
 }
 module.exports = UtilController
