@@ -52,6 +52,9 @@ class UtilController extends BaseController {
    * 把文件片段上传到 public/hash/{hash+index}
    */
   async uploadFile() {
+    // if (Math.random() > 0.3) {
+    //   return this.ctx.status = 500
+    // }
     const { ctx } = this
     const { hash, name } = ctx.request.body
     const file = ctx.request.files[0]
