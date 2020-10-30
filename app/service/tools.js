@@ -49,7 +49,7 @@ class ToolsService extends Service {
 
       const readStream = fse.createReadStream(filePath) // 从文件中读取一定范围的字节
       readStream.on('end', () => { // 当流中数据都写完时，删除切片文件夹
-        fse.unlinkSync(filePath) // 删除碎片文件夹
+        fse.unlinkSync(filePath) // 删除碎片文件
         resolve()
       })
       readStream.pipe(writeStream)
@@ -86,6 +86,19 @@ class ToolsService extends Service {
 
     // 将从切片文件夹读取到的数据chunks合并到路径为filePath的文件
     await this.mergeChunks(chunks, filePath, size)
+    if (fse.existsSync(chunkDir)) {
+      console.log('=========');
+      // fse.readdirSync(chunkDir).forEach(function (file) {
+      //   console.log('file=',file);
+      //   var curPath = chunkDir + "/" + file;
+      //   if (fse.statSync(curPath).isDirectory()) { // recurse
+      //     deleteFolderRecursive(curPath);
+      //   } else { // delete file
+      //     fse.unlinkSync(curPath);
+      //   }
+      // });
+      fse.rmdirSync(chunkDir);
+    }
   }
 }
 
