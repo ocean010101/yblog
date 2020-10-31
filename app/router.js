@@ -19,4 +19,8 @@ module.exports = app => {
     router.post('/login', login)
     router.get('/info', jwt, info)
   })
+  router.group({ name: 'blog', prefix: '/blog' }, router => {
+    const { create } = controller.blog
+    router.post('/create', jwt, create)
+  })
 }
