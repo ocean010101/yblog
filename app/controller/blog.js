@@ -38,5 +38,10 @@ class BlogController extends BaseController {
     // console.log("blog detail blog=", blog);
     this.success(blog)
   }
+  async index() {
+    const { ctx } = this
+    const blogs = await ctx.model.Blog.find().populate('author')
+    this.success(blogs)
+  }
 }
 module.exports = BlogController
