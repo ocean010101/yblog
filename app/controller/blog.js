@@ -31,5 +31,12 @@ class BlogController extends BaseController {
       this.error('创建文章失败')
     }
   }
+  async detail() {
+    const { ctx } = this
+    const { id } = ctx.params
+    const blog = await ctx.model.Blog.findOneAndUpdate({ _id: id }, { $inc: { views: 1 } }).populate('author')
+    // console.log("blog detail blog=", blog);
+    this.success(blog)
+  }
 }
 module.exports = BlogController
