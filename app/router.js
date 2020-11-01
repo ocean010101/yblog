@@ -16,6 +16,7 @@ module.exports = app => {
   router.group({ name: 'user', prefix: '/user' }, router => {
     const { register, login, info,
       isFollow, follow, unfollow,
+      following, followers, getBlogList,
       blogStatus, likeBlog, cancelLikeBlog, dislikeBlog, cancelDislikeBlog } = controller.user
     router.post('/register', register)
     router.post('/login', login)
@@ -27,6 +28,12 @@ module.exports = app => {
     router.put('/follow/:id', jwt, follow)
     // 取消关注文章作者
     router.delete('/follow/:id', jwt, unfollow)
+    // 获取当前用户的关注列表
+    router.get('/:id/following', following)
+    // 获取当前用户的关注者列表
+    router.get('/:id/followers', followers)
+    // 获取当前用户编写的文章列表
+    router.get('/:id/getBlogList', getBlogList)
 
     // 获取文章被点赞和踩的状态
     router.get('/blog/:id', jwt, blogStatus)

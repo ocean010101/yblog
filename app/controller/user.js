@@ -130,6 +130,34 @@ class UserController extends BaseController {
     }
   }
   /**
+   * 获取当前用户关注的列表
+   */
+  async following() {
+    const { ctx } = this
+    const users = await ctx.model.User.findById(ctx.params.id).populate('following')
+    this.success(users.following)
+  }
+  /**
+   * 获取关注者的列表
+   */
+  async followers() {
+    const { ctx } = this
+    // 获取当前用户id
+    // 根据当前用户id查找其他用户的关注列表， 如果有， 那么这个用户就是当前用户的关注者
+    const users = await ctx.model.User.find({ following: ctx.params.id })
+    this.success(users)
+  }
+  /**
+   * 获取当前用户编写的文章列表
+   */
+  async getBlogList() {
+    const { ctx } = this
+    // 获取当前用户id
+    // 根据当前用户id查找文章， 如果文章author字段是当前用户， 那么这个文章是当前用户写的
+    const blogs = await ctx.model.Blog.find({ author: ctx.params.id })
+    this.success(blogs)
+  }
+  /**
    * 获取文章被点赞和踩的状态
    */
   async blogStatus() {
