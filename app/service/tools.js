@@ -87,7 +87,7 @@ class ToolsService extends Service {
     // 将从切片文件夹读取到的数据chunks合并到路径为filePath的文件
     await this.mergeChunks(chunks, filePath, size)
     if (fse.existsSync(chunkDir)) {
-      console.log('=========');
+      console.log('=========')
       // fse.readdirSync(chunkDir).forEach(function (file) {
       //   console.log('file=',file);
       //   var curPath = chunkDir + "/" + file;
@@ -97,7 +97,7 @@ class ToolsService extends Service {
       //     fse.unlinkSync(curPath);
       //   }
       // });
-      fse.rmdirSync(chunkDir);
+      fse.rmdirSync(chunkDir)
     }
   }
 }
